@@ -19,10 +19,11 @@ contract HelperConfig is Script {
 
     NetworkConfig public activeNetworkConfig;
     uint256 public constant DEFAULT_ANVIL_KEY = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
+
     constructor() {
         if (block.chainid == 11155111) {
             activeNetworkConfig = getSepoliaEthConfig();
-        }else{
+        } else {
             activeNetworkConfig = getOrCreateAnvilEthConfig();
         }
     }
@@ -48,14 +49,11 @@ contract HelperConfig is Script {
         uint96 gasPriceLink = 1e9;
 
         vm.startBroadcast();
-        VRFCoordinatorV2Mock vrfCoordinatorMock = new VRFCoordinatorV2Mock(
-            baseFee,
-            gasPriceLink
-        );
+        VRFCoordinatorV2Mock vrfCoordinatorMock = new VRFCoordinatorV2Mock(baseFee, gasPriceLink);
         // Create a new subscription
         uint64 subId = vrfCoordinatorMock.createSubscription();
         // Fund the subscription
-        vrfCoordinatorMock.fundSubscription(subId, 1 * 10**18);
+        vrfCoordinatorMock.fundSubscription(subId, 1 * 10 ** 18);
         vm.stopBroadcast();
 
         return NetworkConfig({

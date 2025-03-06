@@ -13,19 +13,23 @@ import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/vrf/inter
  * @dev This implements the Chainlink VRF Version 2
  */
 
- contract Raffle is VRFConsumerBaseV2{
+contract Raffle is VRFConsumerBaseV2 {
     error Raffle_NotEnoughEthSent();
     error Raffle__TransferFailed();
     error Raffle__NotOpen();
     error Raffle__UpkeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 raffleState);
-    
-    /** Type declarations */
+
+    /**
+     * Type declarations
+     */
     enum RaffleState {
         OPEN,
         CALCULATING
     }
 
-    /** State Variables */
+    /**
+     * State Variables
+     */
     uint16 private constant REQUEST_CONFIRMATIONS = 3;
     uint32 private constant NUM_WORDS = 1;
 
@@ -34,21 +38,20 @@ import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/vrf/inter
     uint256 private immutable i_entranceFee;
     uint256 private immutable i_interval;
     uint256 private s_lastTimeStamp;
-    uint256 private immutable i_deployerKey;    
+    uint256 private immutable i_deployerKey;
     VRFCoordinatorV2Interface private immutable i_vrfCoordinator;
     address private s_recentWinner;
-    address payable[]  private s_players;
+    address payable[] private s_players;
     RaffleState private s_raffleState;
 
-    bytes32 private  immutable i_gasLane;
+    bytes32 private immutable i_gasLane;
 
-
-
-    /** Event */
+    /**
+     * Event
+     */
     event EnteredRaffle(address indexed player);
     event WinnerPicked(address indexed winner);
     event RequestedRaffleWinner(uint256 indexed requestId);
-
 
     constructor(
         uint64 subscriptionId,
@@ -149,16 +152,11 @@ import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/vrf/inter
 
         // Will revert if subscription is not set and funded.
         uint256 requestId = i_vrfCoordinator.requestRandomWords(
-            i_gasLane,
-            i_subscriptionId,
-            REQUEST_CONFIRMATIONS,
-            i_callbackGasLimit,
-            NUM_WORDS
+            i_gasLane, i_subscriptionId, REQUEST_CONFIRMATIONS, i_callbackGasLimit, NUM_WORDS
         );
         // Quiz... is this redundant?
         emit RequestedRaffleWinner(requestId);
     }
-
 
     /**
      * @dev This is the function that Chainlink VRF node
@@ -179,8 +177,9 @@ import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/vrf/inter
         }
     }
 
-
-    /** Getter functions */
+    /**
+     * Getter functions
+     */
     function getEntranceFee() external view returns (uint256) {
         return i_entranceFee;
     }
@@ -188,16 +187,20 @@ import {VRFCoordinatorV2Interface} from "@chainlink/contracts/src/v0.8/vrf/inter
     function getRaffleState() external view returns (RaffleState) {
         return s_raffleState;
     }
+
     function getPlayer(uint256 indexOfPlayer) external view returns (address) {
         return s_players[indexOfPlayer];
     }
+
     function getRecentWinner() external view returns (address) {
         return s_recentWinner;
     }
+
     function getLengthOfPlayers() external view returns (uint256) {
         return s_players.length;
     }
+
     function getLastTimeStamp() external view returns (uint256) {
         return s_lastTimeStamp;
     }
- }
+}
