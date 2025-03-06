@@ -2,5 +2,10 @@
 src = "src"
 out = "out"
 libs = ["lib"]
+remappings = [
+    '@chainlink/=/home/linxun/Coding/ClassWork-foundry-smart-contract-lottery/lib/chainlink-brownie-contracts/',
+    'chainlink-brownie-contracts/=/home/linxun/Coding/ClassWork-foundry-smart-contract-lottery/lib/chainlink-brownie-contracts/',
+    '@solmate/=/home/linxun/Coding/ClassWork-foundry-smart-contract-lottery/lib/solmate/src/',
+]
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
